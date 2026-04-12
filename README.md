@@ -8,21 +8,21 @@ This vagrant-script solves this problem, by automatically installing a freshly u
 # Installation
 Install VirtualBox and Vagrant on your Linux, then on the shell do:
 
-git clone vagrant-win11-vm-carelink
-cd vagrant-win11-vm-carelink
-vagrant up
+	git clone vagrant-win11-vm-carelink && cd vagrant-win11-vm-carelink
+	vagrant up
 
-The initial install might take up to 45 minutes, depending on your bandwidth and the number of windows-updates.
+The initial install might take up to 20 minutes, depending on your bandwidth and the number of windows-updates.
 
 You can cut down the initial installation to under 20 minutes by deleting the block: "# Windows Update Provisioner" in the Vagrantfile.
 
-Subsequent startups need less than 2 minutes.
+Subsequent startups need less than one minutes.
+
 
 # Usage after initial installation
 
 To stop the VM use:
-vagrant halt
+	vagrant halt
 
 To restart the VM use:
-vagrant up
+	vagrant up
 
