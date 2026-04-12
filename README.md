@@ -3,7 +3,7 @@ Medtronic (carelink) does not offer a Linux version of the CareLink Uploader (on
 
 This is a Windows 11 vm for Virtualbox with automated download and installation of the CareLink software for Linux-users of Medtronic insulin-pumps in order to upload the pump's data to the CareLink platform from their Linux machines.
 
-This vagrant-script solves this problem, by automatically installing a freshly updated Windows 11 box in Virtualbox, downloads and installs the CareLink Uploader software and allows Linux users to plugin the bluetooth-usb-stick provided by CareLink and upload their insulin-pump-data to the platform of CareLink.
+This vagrant-script solves this problem, by automatically installing a freshly updated Windows 11 box in Virtualbox, downloading and installing the CareLink Uploader software & drivers. This allows Linux users to plugin the bluetooth-usb-stick provided by CareLink and upload their insulin-pump-data to the platform of CareLink.
 
 ## Installation
 Install VirtualBox and Vagrant on your Linux, then on the shell do:
