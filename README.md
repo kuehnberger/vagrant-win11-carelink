@@ -21,8 +21,10 @@ Subsequent startups need less than one minutes.
 # Usage after initial installation
 
 To stop the VM use:
+
 	vagrant halt
 
 To restart the VM use:
+	
 	vagrant up
 
