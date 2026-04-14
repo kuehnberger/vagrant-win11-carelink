@@ -1,7 +1,7 @@
 # NEXT - G
 ########################################
 - ideas from CareLink2 implementierern (do diff)
-- put PS scripts externaly
+- move all PS scripts vom Vagrantfile to ./scripts/
 - rewrite REBOOT PS @end, which failed for mich@linux
 - add Windows Update Provisioner
 - add Post-Reboot Provisioner: Launch Edge Maximized, skip Welcome & Customization Dialog and Open URL  "https://carelink.minimed.eu/app/login"
