@@ -1,0 +1,35 @@
+# NEXT - G
+########################################
+- local git
+- update github from the shell
+- ideas from CareLink2 implementierern (do diff)
+- put PS scripts externaly
+- rewrite REBOOT PS @end, which failed for mich@linux
+- add Windows Update Provisioner
+- add Post-Reboot Provisioner: Launch Edge Maximized, skip Welcome & Customization Dialog and Open URL  "https://carelink.minimed.eu/app/login"
+- testrun all new PS1 stuff upfront as small components in the faster W10.box
+- add Windows-Deboater (dont install optional stuff AND/OR remove superflous stuff)
+- add VM-disk shrinker
+- 
+
+# NEXT - M
+########################################
+- test new github version - basics
+- destroy box, change "--serialnumber", "8232f7bb2fc6f01186a5e685d758ebe5" to other number and re-test (Verdacht: Seriennummer ist UNIQUE), dann muss diese Config weg.
+
+# DECISSONS taken
+########################################
++ EN is OK. (avoid 5 step selection process of win.DE.iso)
++ Stick to "gusztavvargadr/windows-11" = EN
++ TZ and Keybord = DE / optional: ? make it configurable ? NO !
+
+
+# DONE - G
+########################################
+
+
+
+
+
+
+
