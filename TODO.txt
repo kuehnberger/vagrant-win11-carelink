@@ -1,7 +1,5 @@
 # NEXT - G
 ########################################
-- local git
-- update github from the shell
 - ideas from CareLink2 implementierern (do diff)
 - put PS scripts externaly
 - rewrite REBOOT PS @end, which failed for mich@linux
@@ -26,6 +24,9 @@
 
 # DONE - G
 ########################################
++ local git
++ update github from the shell
+
 
 
 
