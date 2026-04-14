@@ -35,6 +35,28 @@ Vagrant.configure("2") do |config|
     vb.customize ["modifyvm", :id, "--bios-logo-fade-in", "off"]
     vb.customize ["modifyvm", :id, "--bios-logo-fade-out", "off"]
 
+    # Enable the USB Controller
+    vb.customize ["modifyvm", :id, "--usb", "on"]
+    
+    # Choose version: "on" (1.1), "2.0" (ehci), or "3.0" (xhci)
+    # Note: 3.0 requires the VirtualBox Extension Pack
+    vb.customize ["modifyvm", :id, "--usbxhci", "on"]
+
+    # Option A: Disconnected (Port exists but is not piped)
+    vb.customize ["modifyvm", :id, "--uart1", "0x3f8", "4", "--uartmode1", "disconnected"]    
+
+    # (Optional) Create a USB Filter so a specific device connects automatically
+    # Use 'VBoxManage list usbhost' on your host to find product/vendor IDs
+    # vb.customize ["usbfilter", "add", "0", "--target", :id, "--name", "MyDevice", "--vendorid", "0x1234", "--productid", "0xabcd"]
+
+    # Add the USB Filter for the Silicon Labs Controller; this is the CareLink USB-stick
+    vb.customize ["usbfilter", "add", "0",
+      "--target", :id,
+      "--name", "Silicon Labs CP2102N USB to UART Bridge",
+      "--vendorid", "0x10c4",
+      "--productid", "0xea60",
+      "--serialnumber", "8232f7bb2fc6f01186a5e685d758ebe5"
+    ]
   end
 
 # Adjust Language, Timezone and Keyboard Settings
@@ -112,5 +134,8 @@ Vagrant.configure("2") do |config|
     Write-Host "`n`n`n"
     Write-Host "### - ALL FINISHED - Please plug-in your USB-Stick now. Then switch to the Windows-VM, where you can open the website of CareLink Personal to login. - Enjoy your day and leave a comment or start on github - Thanks."
   SHELL
+
+
+
 
 end
