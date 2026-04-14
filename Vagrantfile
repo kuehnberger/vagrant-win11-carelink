@@ -135,7 +135,4 @@ Vagrant.configure("2") do |config|
     Write-Host "### - ALL FINISHED - Please plug-in your USB-Stick now. Then switch to the Windows-VM, where you can open the website of CareLink Personal to login. - Enjoy your day and leave a comment or start on github - Thanks."
   SHELL
 
-
-
-
 end
