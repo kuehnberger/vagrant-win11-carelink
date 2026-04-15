@@ -1,14 +1,11 @@
 # NEXT - G
 ########################################
-- ideas from CareLink2 implementierern (do diff)
+- DOCU: add minimum Versionnumbers for virtualbox and vagrant.
 - move all PS scripts vom Vagrantfile to ./scripts/
 - rewrite REBOOT PS @end, which failed for mich@linux
-- add Windows Update Provisioner
-- add Post-Reboot Provisioner: Launch Edge Maximized, skip Welcome & Customization Dialog and Open URL  "https://carelink.minimed.eu/app/login"
-- testrun all new PS1 stuff upfront as small components in the faster W10.box
-- add Windows-Deboater (dont install optional stuff AND/OR remove superflous stuff)
-- add VM-disk shrinker
-- 
+- Y: ??? add Windows Update Provisioner - eventually delayed 
+- Y/N: ??? OpenBrowser:  ???
+
 
 # NEXT - M
 ########################################
@@ -23,6 +20,7 @@
 der Kernel zu erweitern (Stichwort dkms). Ich würde das fast erwähnen,
 doch mit Verweis auf die jeweilige Distro (!). G: "JA - gerne, ich kanns für Debian/UBUNTU machen"
 
+- Launch Edge Maximized: Skip Welcome & Customization Dialog and Open URL  "https://carelink.minimed.eu/app/login" oder NUR als Startseite setzen.
 
 
 # DECISSONS taken

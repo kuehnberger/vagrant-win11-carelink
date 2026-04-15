@@ -29,8 +29,8 @@ Vagrant.configure("2") do |config|
     vb.customize ["modifyvm", :id, "--paravirt-provider", "default"]
     vb.customize ["modifyvm", :id, "--nested-hw-virt", "off"]
 
-    # Set the graphics controller to VBoxSVGA
-    vb.customize ["modifyvm", :id, "--graphicscontroller", "vboxsvga"]
+    # Set the graphics controller
+    vb.customize ["modifyvm", :id, "--graphicscontroller", "vmsvga"]
     # Disable 3D to prevent driver hangs during boot
     vb.customize ["modifyvm", :id, "--accelerate3d", "off"]
     # # Optional: Increase video memory for better performance
