@@ -15,6 +15,16 @@
 - test new github version - basics
 - destroy box, change "--serialnumber", "8232f7bb2fc6f01186a5e685d758ebe5" to other number and re-test (Verdacht: Seriennummer ist UNIQUE), dann muss diese Config weg.
 
+
+# DECISSONS to be TAKEN
+########################################
+- Auswahlmöglichkeit TZ und Keyboard wären vorteilhaft, oder? - A: "Ja, weiss nur noch nicht WIE ich Dialoge in das Vagrantfile 'reinbringen kann/und ob überhaupt."
+- Unter Linux - in meinem Fall "Arch" - ist für den Betrieb von vb's auch 
+der Kernel zu erweitern (Stichwort dkms). Ich würde das fast erwähnen,
+doch mit Verweis auf die jeweilige Distro (!). G: "JA - gerne, ich kanns für Debian/UBUNTU machen"
+
+
+
 # DECISSONS taken
 ########################################
 + EN is OK. (avoid 5 step selection process of win.DE.iso)
@@ -26,6 +36,11 @@
 ########################################
 + local git
 + update github from the shell
++ Im Vagrant-file schlage ich vor, den Hauptspeicher auf "6144" zu setzen, 
++ sowie die Anzeige auf "VboxSVGA". 
++ 3D-Beschleunigung is für die Würscht
++ Gemeinsame Zwischenablage auf "bidirektional", 
++ ebenso "Drag und Drop".
 
 
 

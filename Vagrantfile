@@ -22,23 +22,29 @@ Vagrant.configure("2") do |config|
   # vm custom config
   config.vm.provider "virtualbox" do |vb|
     vb.gui = true
-    vb.memory = "8192" # Minimum 4GB recommended
-    vb.cpus = 2
+    vb.memory = "6144" # Minimum 4GB recommended, best selection: 6GB
+    vb.cpus = 2 # Minimum requirement for Win11: 2
 
     # Required for better performance/stability on Win11 guests
     vb.customize ["modifyvm", :id, "--paravirt-provider", "default"]
     vb.customize ["modifyvm", :id, "--nested-hw-virt", "off"]
 
-    # The VMSVGA controller is common, but VBoxSVGA of vboxvga is often more stable for Windows guests experiencing black screens.
-    vb.customize ["modifyvm", :id, "--graphicscontroller", "vmsvga"]
+    # Set the graphics controller to VBoxSVGA
+    vb.customize ["modifyvm", :id, "--graphicscontroller", "vboxsvga"]
     # Disable 3D to prevent driver hangs during boot
     vb.customize ["modifyvm", :id, "--accelerate3d", "off"]
-    # Set the video RAM
+    # # Optional: Increase video memory for better performance
     vb.customize ["modifyvm", :id, "--vram", "256"]
+    # Disable 3D acceleration
+    
+    # Add this to see the BIOS/EFI process (for boot debugging only)
+    vb.customize ["modifyvm", :id, "--bios-logo-fade-in", "on"]
+    vb.customize ["modifyvm", :id, "--bios-logo-fade-out", "on"]
 
-    # Add this to see the BIOS/EFI process:
-    vb.customize ["modifyvm", :id, "--bios-logo-fade-in", "off"]
-    vb.customize ["modifyvm", :id, "--bios-logo-fade-out", "off"]
+    # Enable bidirectional shared clipboard
+    vb.customize ["modifyvm", :id, "--clipboard", "bidirectional"]   
+    # Optional: Enable bidirectional Drag and Drop
+    vb.customize ["modifyvm", :id, "--draganddrop", "bidirectional"]
 
     # Enable the USB Controller
     vb.customize ["modifyvm", :id, "--usb", "on"]
