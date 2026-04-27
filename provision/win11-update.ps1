@@ -1,4 +1,4 @@
-Write-Host "### Windows 11 Update starting - might take up to 30 minutes - grab a beverage, relax and let the automation do it's thing ;-)"
+Write-Host "### Windows 11 Update - Starting - might take up to 30 minutes - grab a beverage, relax and let the automation do it's thing ;-)"
 
 $TaskName = "VagrantUpdate"
 $Script = {
@@ -22,3 +22,4 @@ while ((Get-ScheduledTask -TaskName $TaskName).State -eq "Running") {
 # 3. Clean up
 Unregister-ScheduledTask -TaskName $TaskName -Confirm:$false
 
+Write-Host "### Windows 11 Update - Finished - it might as scheduled task later on - We hope you enjoyed your beverage and minutes of relaxation."

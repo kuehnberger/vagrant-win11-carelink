@@ -3,6 +3,25 @@
 
 Vagrant.require_version ">= 2.4.9"
 
+# shows the current project-directory
+puts "Vagrant project root is: #{File.expand_path(File.dirname(__FILE__))}"
+
+# 1. Check if the environment variable VAGRANT_KEYBOARD_LANG is set
+#    This allows for starting vagrant up with a preset  
+#    keyboard layout setting eg. like:
+#    "VAGRANT_KEYBOARD_LANG=2 vagrant up" in case you use a German keyboard.
+keyboard_choice = ENV['VAGRANT_KEYBOARD_LANG']
+
+# 2. If keyboard_choice is nil (not set), ask the user manually
+if keyboard_choice.nil?
+  STDOUT.puts "##############################################"
+  STDOUT.puts "#####     Keyboard Layout Selection      #####"
+  STDOUT.puts "##############################################"
+  STDOUT.puts "No Keyboard Layout detected in ENV_VARS"
+  STDOUT.print "Please select your Keyboard Layout (1: EN, 2: DE, default is 1:EN): "
+  keyboard_choice = STDIN.gets.strip
+end
+
 Vagrant.configure("2") do |config|
   # Basics (box, version, guest)
   config.vm.box = "gusztavvargadr/windows-11"
@@ -19,10 +38,13 @@ Vagrant.configure("2") do |config|
   # This prevents Vagrant from declaring the VM "failed" while Windows is still "thinking".
   config.vm.boot_timeout = 1800
 
+  # Native Vagrant method to resize the primary disk - 'primary: true' targets the main OS drive
+  config.vm.disk :disk, size: "40GB", primary: true # Win-11 recommends at least +128GB
+
   # vm custom config
   config.vm.provider "virtualbox" do |vb|
     vb.gui = true
-    vb.memory = "6144" # Minimum 4GB recommended, best selection: 6GB
+    vb.memory = "8192" # Minimum 4GB recommended, best selection: 6GB (6144)
     vb.cpus = 2 # Minimum requirement for Win11: 2
 
     # Required for better performance/stability on Win11 guests
@@ -60,90 +82,64 @@ Vagrant.configure("2") do |config|
     # Use 'VBoxManage list usbhost' on your host to find product/vendor IDs
     # vb.customize ["usbfilter", "add", "0", "--target", :id, "--name", "MyDevice", "--vendorid", "0x1234", "--productid", "0xabcd"]
 
-    # Add the USB Filter for the Silicon Labs Controller; this is the CareLink USB-stick
+    # Add a USB Filter for the Silicon Labs Controller; this is the CareLink USB-stick
     vb.customize ["usbfilter", "add", "0",
       "--target", :id,
       "--name", "Silicon Labs CP2102N USB to UART Bridge",
       "--vendorid", "0x10c4",
-      "--productid", "0xea60",
-      "--serialnumber", "8232f7bb2fc6f01186a5e685d758ebe5"
+      "--productid", "0xea60"
     ]
   end
 
-# Adjust Language, Timezone and Keyboard Settings
-  config.vm.provision "shell", powershell_args: "-ExecutionPolicy Bypass", inline: <<-SHELL
-    Write-Host "### - NEXT - Setting Language, Timezone and Keyboard"
 
-    # 1. Set Timezone to Berlin
-    Set-TimeZone -Id "W. Europe Standard Time"
+  # Set keyboard and culture - based on Keyboard Language Selection
+  # NB you can get the name from the list:
+  # [Globalization.CultureInfo]::GetCultures('InstalledWin32Cultures') | Out-GridViewas
+  if keyboard_choice == "2"
+    # German block
+    config.vm.provision "shell", inline: "echo '##############################################\nHallo, User mit Deutscher Tastatur!'"
+    config.vm.provision "shell", path: "provision/ps.ps1", args: "set-keyboard-culture-de.ps1"
+  else
+    # Default English block
+    config.vm.provision "shell", inline: "echo '##############################################\nHello User with English keyboard!'"
+    config.vm.provision "shell", path: "provision/ps.ps1", args: "set-keyboard-culture-en.ps1"
+  end
 
-    # 2. Set System Locale and UI Language to German (Germany)
-    Set-WinSystemLocale -SystemLocale de-DE
-    Set-WinUserLanguageList -LanguageList de-DE -Force
-    Set-Culture de-DE
+  # Set TZ
+  # tzutil /l lists all available timezone ids
+  config.vm.provision "shell", path: "provision/ps.ps1", args: "set-timezone.ps1"
 
-    # 3. Set KeyBoard layout to German
-    Set-WinDefaultInputMethodOverride -InputTip "0407:00000407"
+  # Show all files w extensions and show window while dragging
+  config.vm.provision "shell", path: "provision/showfiles.ps1", args: "provision/showfiles.ps1"
 
-    # 4. Define the language list properly
-    $1 = New-WinUserLanguageList de-DE
-    Set-WinUserLanguageList -LanguageList $1 -Force
-    Write-Host "### - DONE - Language, Timezone and Keyboard set to German/Berlin."
-  SHELL
+  # Set Performance: High
+  config.vm.provision "shell", inline: "powercfg /SETACTIVE 8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c", name: "Set Performance: High"
 
+  # Get and install the CareLink software
+  config.vm.provision "shell", path: "provision/ps.ps1", args: "carelink-download-install.ps1"
 
+  #  Win11 debloater
+  config.vm.provision "shell", path: "provision/ps.ps1", args: "debloater.ps1"
 
-# Get the CareLink Software
-  config.vm.provision "shell", powershell_args: "-ExecutionPolicy Bypass", inline: <<-SHELL
-    Write-Host "### - NEXT - CareLinkUploader: Download START - might take a while (172 MB)"
-    
-    # 1. Optimize performance by hiding the progress bar
-    $ProgressPreference = 'SilentlyContinue'
+  # Windows Update - THIS MIGHT TAKE up to 45 minutes
+  # config.vm.provision "shell", path: "provision/ps.ps1", args: "win11-update.ps1"
 
-    # 2. Force PowerShell to use TLS 1.2 for the connection
-    [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+  # Show a summary - mainly for headless setups
+  # config.vm.provision "shell", path: "provision/ps.ps1", args: "summary.ps1"
 
-    # 3. Create the directory if it doesn't exist
-    if (!(Test-Path "C:\\tmp")) {
-        New-Item -ItemType Directory -Force -Path "C:\\tmp"
-    }
+  # configure vagrant/vagrant as autologin user
+  config.vm.provision "shell", path: "provision/ps.ps1", args: "autologon-vagrant-config.ps1"
+  # set URL as startup 
+  config.vm.provision "shell", path: "provision/ps.ps1", args: "open-url.ps1"
 
-    # 4. Perform the download
-    $url = "https://carelink.minimed.eu/tools/uploader/CareLinkUploader-ACC-7350-3.13.0-windows-installer.msi"
-    $output = "C:\\tmp\\CareLinkUploader-ACC-7350-3.13.0-windows-installer.msi"
-    Invoke-WebRequest -Uri $url -OutFile $output
-    
-    Write-Host "### - DONE - CareLinkUploader: Download FINISHED"
-  SHELL
-
-
-# Install the CareLink Software - run the silent MSI installation & reboot
-  config.vm.provision "shell", inline: <<-SHELL
-    Write-Host "### - NEXT - CareLinkUploader: Installation START - this will take some time"
-
-    # /passive = Shows progress bar but requires no user interaction
-    # /norestart = Prevents the MSI from killing the session prematurely
-    $msiPath = "C:\\tmp\\CareLinkUploader-ACC-7350-3.13.0-windows-installer.msi"
-    $process = Start-Process -FilePath "msiexec.exe" -ArgumentList "/i `"$msiPath`" /passive /norestart" -Wait -PassThru
-    
-    # Check for success (0) or 'Reboot Required' (3010)
-    if ($process.ExitCode -ne 0 -and $process.ExitCode -ne 3010) {
-        Write-Error "Installation failed with exit code $($process.ExitCode)"
-        exit $process.ExitCode
-    }
-
-    Write-Host "### - DONE - CareLinkUploader: Installation FINISHED. I will reboot now."
-  SHELL
-
-
-# Reboot - This tells Vagrant to restart the guest and wait for it to come back online
-  config.vm.provision "shell", inline: "shutdown /r /t 5 /f /d p:4:1"
-
-
-# FINISH
+  # FINISH
   config.vm.provision "shell", inline: <<-SHELL
     Write-Host "`n`n`n"
-    Write-Host "### - ALL FINISHED - Please plug-in your USB-Stick now. Then switch to the Windows-VM, where you can open the website of CareLink Personal to login. - Enjoy your day and leave a comment or start on github - Thanks."
+    Write-Host "### - ALL FINISHED - Please plug-in your CareLink-USB-Stick now. We will reboot in a few seconds. After Reboot the user: vagrant/vagrant will be logged in automatically. After the reboot of the Windows-VM you can open the website of CareLink Personal to login. - Enjoy your day and leave a star or comment on github - Thanks. - ###"
   SHELL
+
+  # Reboot after provisioning
+  config.vm.provision "shell", inline: "shutdown /r /t 5 /f /d p:4:1"
+  
 
 end
