@@ -8,8 +8,8 @@ This is a Windows 11 vm for Virtualbox with automated download and installation 
 This vagrant-script solves this problem, by automatically installing a freshly updated Windows 11 box in Virtualbox, downloading and installing the CareLink Uploader software & drivers. This allows Linux users to plugin the bluetooth-usb-stick provided by CareLink and upload their insulin-pump-data to the platform of CareLink.
 
 ## Installation
-- Upfront install the requirenments: VirtualBox (>= 7.2.6) and Vagrant (>= 2.4.9) on your Linux. 
-- Then on the shell (anywhere you want) get the repo via git and run vagrant which starts up Virtualbox and does all the config and installation automatically:
+Upfront install the requirements: VirtualBox and Vagrant on your Linux. 
+Then on the shell (anywhere you want) get the repo via git and run vagrant which starts up Virtualbox and does all the config and installation automatically:
 
 	git clone https://github.com/kuehnberger/vagrant-win11-carelink.git
 	cd vagrant-win11-carelink
