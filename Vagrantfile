@@ -44,7 +44,7 @@ Vagrant.configure("2") do |config|
   # vm custom config
   config.vm.provider "virtualbox" do |vb|
     vb.gui = true
-    vb.memory = "8192" # Minimum 4GB recommended, best selection: 6GB (6144)
+    vb.memory = "6144" # Minimum 4GB recommended, best selection: 6GB (6144)
     vb.cpus = 2 # Minimum requirement for Win11: 2
 
     # Required for better performance/stability on Win11 guests
